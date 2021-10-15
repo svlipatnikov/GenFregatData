@@ -4,6 +4,10 @@ const { getSheetData, getFileName } = require("./helpers");
 
 module.exports.sidRead = (application) => {
   const fileName = getFileName("../" + application, ".xlsx");
+  if (!fileName) return;
+
+  console.log(`Reading SID ${application}...`);
+
   const excelData = xlsx.readFile("../" + application + "/" + fileName);
   const resultData = {};
 

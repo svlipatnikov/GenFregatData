@@ -3,7 +3,10 @@ const { getFileName } = require("./helpers");
 
 module.exports.vl2portsRead = (pos) => {
   const basePath = "../CONFIG/";
+  if (!fs.readdirSync(basePath).includes(pos)) return;
+
   const fileName = getFileName(basePath + pos, ".utst");
+  if (!fileName) return;
 
   const vl2ports = fs.readFileSync(basePath + pos + "/" + fileName);
   const result = vl2ports.toString().split("\r\n");

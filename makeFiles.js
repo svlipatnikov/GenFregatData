@@ -1,9 +1,9 @@
 const { TYPES } = require("./static");
 
-module.exports.makeParam = (table, pos, ICD) => {
+module.exports.makeParam = ({ table, pos, ICD = false }) => {
   const indexEquipment = 0;
   const indexIdentity = table.headers.findIndex((h) => h === "Identity");
-  const indexParam = !!ICD
+  const indexParam = ICD
     ? 7
     : table.headers.findIndex((h) => h === "Parameter name");
 
@@ -11,48 +11,38 @@ module.exports.makeParam = (table, pos, ICD) => {
     .filter((r) => r[indexEquipment] === pos)
     .map((row, i) => {
       const index = i + 1; //fregat index started with 1
-      const identity = !!ICD ? "_" + row[indexIdentity] : "";
+      const identity = ICD ? "_" + row[indexIdentity] : "";
       const param = row[indexParam];
       return "" + param + identity + " = " + index + "\r\n"; // Чтобы было как у Чекмарева
     })
     .join("");
 };
 
-module.exports.makeMesSize = ({
-  messagesDA,
-  messagesBITE,
-  afdx2tte,
-  pos,
-  IO,
-}) => {
-  const indexEquipmentDA = messagesDA.headers.findIndex(
-    (h) => h === "Equipment"
-  );
-  const indexAfdxPortDA = messagesDA.headers.findIndex(
-    (h) => h === "AFDX Port"
-  );
-  const indexMesSizeDA = messagesDA.headers.findIndex((h) => h === "Size");
+module.exports.makeMesSize = ({ mesDA, mesBITE, afdx2tte, pos, IO }) => {
+  const indexEquipmentDA = mesDA.headers.findIndex((h) => h === "Equipment");
+  const indexAfdxPortDA = mesDA.headers.findIndex((h) => h === "AFDX Port");
+  const indexMesSizeDA = mesDA.headers.findIndex((h) => h === "Size");
 
-  const indexEquipmentBITE = messagesBITE?.headers.findIndex(
+  const indexEquipmentBITE = mesBITE?.headers.findIndex(
     (h) => h === "Equipment"
   );
-  const indexAfdxPortBITE = messagesBITE?.headers.findIndex(
+  const indexAfdxPortBITE = mesBITE?.headers.findIndex(
     (h) => h === "AFDX Port"
   );
-  const indexMesSizeBITE = messagesBITE?.headers.findIndex((h) => h === "Size");
+  const indexMesSizeBITE = mesBITE?.headers.findIndex((h) => h === "Size");
 
   return Object.entries(afdx2tte)
     .filter(([port, { direction }]) => direction === IO)
     .map(([port, { tte }]) => {
       const message =
-        messagesDA.data
+        mesDA.data
           .filter((r) => r[indexEquipmentDA] === pos)
           .find((r) => r[indexAfdxPortDA] === port) || {};
       let mesSize = message[indexMesSizeDA];
 
-      if (!mesSize) {
+      if (!mesSize && mesBITE) {
         const messageBITE =
-          messagesBITE.data
+          mesBITE.data
             .filter((r) => r[indexEquipmentBITE] === pos)
             .find((r) => r[indexAfdxPortBITE] === port) || {};
         mesSize = messageBITE[indexMesSizeBITE];
@@ -64,9 +54,9 @@ module.exports.makeMesSize = ({
     .join("\r\n");
 };
 
-module.exports.makeData = (excel, afdx2tte, pos, IO) => {
-  const data = IO === "I" ? excel.input.data : excel.output.data;
-  const headers = IO === "I" ? excel.input.headers : excel.output.headers;
+module.exports.makeData = ({ sid, afdx2tte, pos, IO }) => {
+  const data = IO === "I" ? sid.input.data : sid.output.data;
+  const headers = IO === "I" ? sid.input.headers : sid.output.headers;
 
   const indexEquipment = headers.findIndex((h) => h === "Equipment");
   const indexVlName = headers.findIndex((h) => h === "VL Name");
@@ -80,11 +70,7 @@ module.exports.makeData = (excel, afdx2tte, pos, IO) => {
   return data
     .filter((r) => r[indexEquipment] === pos)
     .map((row) => {
-      const afdxPort = getAfdxPortByVlName(
-        excel.messages,
-        row[indexVlName],
-        pos
-      );
+      const afdxPort = getAfdxPortByVlName(sid.messages, row[indexVlName], pos);
       const range =
         row[indexRange] === "N/A"
           ? "0...0"
