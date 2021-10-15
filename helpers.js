@@ -1,11 +1,11 @@
 const fs = require("fs");
 
 module.exports.getApps = () => {
-  return fs.readFileSync("apps.txt").toString().split("\r\n");
+  return fs.readFileSync("../apps.txt").toString().split("\r\n");
 };
 
 module.exports.getPos = () => {
-  return fs.readFileSync("positions.txt").toString().split("\r\n");
+  return fs.readFileSync("../positions.txt").toString().split("\r\n");
 };
 
 module.exports.getFileName = (dir, ext = "") => {

@@ -3,8 +3,8 @@ const { SHEETS } = require("./static");
 const { getSheetData, getFileName } = require("./helpers");
 
 module.exports.sidRead = (application) => {
-  const fileName = getFileName(application, ".xlsx");
-  const excelData = xlsx.readFile(application + "/" + fileName);
+  const fileName = getFileName("../" + application, ".xlsx");
+  const excelData = xlsx.readFile("../" + application + "/" + fileName);
   const resultData = {};
 
   Object.entries(SHEETS).forEach(([key, name]) => {

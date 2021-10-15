@@ -15,14 +15,15 @@ console.log("DUPOS:", pos);
 
 const afdx2tte = vl2portsRead(pos);
 // console.log("afdx2tte", afdx2tte);
-// console.log(typeof afdx2tte);
 
 const sidDA = sidRead("DA");
 // console.log("sidDA", sidDA);
 
 const sidBITE = sidRead("BITE");
 // console.log("sidBITE", sidBITE);
+
 const IO = "O";
+const fileName = `${pos}_Mes_Size${IO === "O" ? "_Out" : ""}.txt`;
 const mesSizeOut = makeMesSize({
   messagesDA: sidDA.messages,
   messagesBITE: sidBITE?.messages,
@@ -32,8 +33,7 @@ const mesSizeOut = makeMesSize({
 });
 // console.log("mesSizeOut", mesSizeOut);
 
-const outPath = "FREGAT_DATA";
-const fileName = `${pos}_Mes_Size${IO === "O" ? "_Out" : ""}.txt`;
+const outPath = "../FREGAT_DATA";
 fs.rmdirSync(outPath, { recursive: true });
 fs.mkdirSync(outPath);
 fs.mkdirSync(outPath + "/" + pos);
