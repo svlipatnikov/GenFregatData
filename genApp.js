@@ -21,7 +21,10 @@ if (
 const apps = getApps();
 const positions = getPos();
 const sidDA = sidRead("DA");
-const sidBITE = apps.includes("BITE") ? sidRead("BITE") : undefined;
+const sidBITE =
+  apps.includes("BITE") && inputDir.includes("BITE")
+    ? sidRead("BITE")
+    : undefined;
 
 // GENERATE FILES
 const OUT_PATH = "../FREGAT_DATA/";
