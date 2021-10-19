@@ -62,11 +62,13 @@ positions.forEach((pos) => {
   fs.writeFileSync(path + `/${pos}_ICD_Param_Out.utst`, icdParamOut);
 
   if (!sidBITE) return;
+  const start = 100000;
+  const ICD = true;
 
-  const paramOutBITE = makeParam({ table: sidDA.output, pos });
-  const paramInBITE = makeParam({ table: sidDA.input, pos });
-  const icdParamOutBITE = makeParam({ table: sidDA.output, pos, ICD: true });
-  const icdParamInBITE = makeParam({ table: sidDA.input, pos, ICD: true });
+  const paramOutBITE = makeParam({ table: sidDA.output, pos, start });
+  const paramInBITE = makeParam({ table: sidDA.input, pos, start });
+  const icdParamOutBITE = makeParam({ table: sidDA.output, pos, ICD, start });
+  const icdParamInBITE = makeParam({ table: sidDA.input, pos, ICD, start });
   const dataOutBITE = makeData({ sid: sidDA, afdx2tte, pos, IO: "O" });
   const dataInBITE = makeData({ sid: sidDA, afdx2tte, pos, IO: "I" });
 

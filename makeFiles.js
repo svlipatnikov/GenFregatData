@@ -1,6 +1,6 @@
 const { TYPES } = require("./static");
 
-module.exports.makeParam = ({ table, pos, ICD = false }) => {
+module.exports.makeParam = ({ table, pos, ICD = false, start = 1 }) => {
   const indexEquipment = 0;
   const indexIdentity = table.headers.findIndex((h) => h === "Identity");
   const indexParam = ICD
@@ -10,7 +10,7 @@ module.exports.makeParam = ({ table, pos, ICD = false }) => {
   return table.data
     .filter((r) => r[indexEquipment] === pos)
     .map((row, i) => {
-      const index = i + 1; //fregat index started with 1
+      const index = i + start; //fregat index started with 1
       const identity = ICD ? "_" + row[indexIdentity] : "";
       const param = row[indexParam];
       return "" + param + identity + " = " + index + "\r\n"; // Чтобы было как у Чекмарева
