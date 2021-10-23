@@ -8,12 +8,7 @@ console.log("Start gen-fregat-data app...");
 
 // проверка на наличие всех данных
 const inputDir = fs.readdirSync("../");
-if (
-  !inputDir.includes("DA") ||
-  !inputDir.includes("CONFIG") ||
-  !inputDir.includes("apps.txt") ||
-  !inputDir.includes("positions.txt")
-) {
+if (!inputDir.includes("DA") || !inputDir.includes("CONFIG")) {
   console.log("Wrong data");
   return;
 }
@@ -21,10 +16,7 @@ if (
 const apps = getApps();
 const positions = getPos();
 const sidDA = sidRead("DA");
-const sidBITE =
-  apps.includes("BITE") && inputDir.includes("BITE")
-    ? sidRead("BITE")
-    : undefined;
+const sidBITE = apps.includes("BITE") && inputDir.includes("BITE") ? sidRead("BITE") : undefined;
 
 // GENERATE FILES
 const OUT_PATH = "../FREGAT_DATA/";
@@ -37,7 +29,7 @@ positions.forEach((pos) => {
   console.log("Gen files for", pos);
 
   const mesDA = sidDA.messages;
-  const mesBITE = sidBITE?.messages;
+  const mesBITE = sidBITE ? sidBITE.messages : undefined;
 
   const mesSizeOut = makeMesSize({ mesDA, mesBITE, afdx2tte, pos, IO: "O" });
   const mesSizeIn = makeMesSize({ mesDA, mesBITE, afdx2tte, pos, IO: "I" });
@@ -65,12 +57,12 @@ positions.forEach((pos) => {
   const start = 100000;
   const ICD = true;
 
-  const paramOutBITE = makeParam({ table: sidDA.output, pos, start });
-  const paramInBITE = makeParam({ table: sidDA.input, pos, start });
-  const icdParamOutBITE = makeParam({ table: sidDA.output, pos, ICD, start });
-  const icdParamInBITE = makeParam({ table: sidDA.input, pos, ICD, start });
-  const dataOutBITE = makeData({ sid: sidDA, afdx2tte, pos, IO: "O" });
-  const dataInBITE = makeData({ sid: sidDA, afdx2tte, pos, IO: "I" });
+  const paramOutBITE = makeParam({ table: sidBITE.output, pos, start });
+  const paramInBITE = makeParam({ table: sidBITE.input, pos, start });
+  const icdParamOutBITE = makeParam({ table: sidBITE.output, pos, ICD, start });
+  const icdParamInBITE = makeParam({ table: sidBITE.input, pos, ICD, start });
+  const dataOutBITE = makeData({ sid: sidBITE, afdx2tte, pos, IO: "O" });
+  const dataInBITE = makeData({ sid: sidBITE, afdx2tte, pos, IO: "I" });
 
   fs.writeFileSync(path + `/${pos}_BITE_Data.txt`, dataInBITE);
   fs.writeFileSync(path + `/${pos}_BITE_Data_Out.txt`, dataOutBITE);

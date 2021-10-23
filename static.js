@@ -5,8 +5,6 @@ module.exports.SHEETS = {
   input: "Input AFDX Data Definition",
 };
 
-module.exports.DUPOS = ["DUOL", "DUIL", "DUCD", "DUIR", "DUOR"];
-
 module.exports.TYPES = {
   bool: 1,
   integer: 2,

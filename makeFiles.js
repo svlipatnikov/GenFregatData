@@ -1,16 +1,14 @@
 const { TYPES } = require("./static");
 
-module.exports.makeParam = ({ table, pos, ICD = false, start = 1 }) => {
+module.exports.makeParam = ({ table, pos, ICD = false, start = 0 }) => {
   const indexEquipment = 0;
   const indexIdentity = table.headers.findIndex((h) => h === "Identity");
-  const indexParam = ICD
-    ? 7
-    : table.headers.findIndex((h) => h === "Parameter name");
+  const indexParam = ICD ? 7 : table.headers.findIndex((h) => h === "Parameter name");
 
   return table.data
     .filter((r) => r[indexEquipment] === pos)
     .map((row, i) => {
-      const index = i + start; //fregat index started with 1
+      const index = i + 1 + start; //fregat index started with 1
       const identity = ICD ? "_" + row[indexIdentity] : "";
       const param = row[indexParam];
       return "" + param + identity + " = " + index + "\r\n"; // Чтобы было как у Чекмарева
@@ -23,13 +21,13 @@ module.exports.makeMesSize = ({ mesDA, mesBITE, afdx2tte, pos, IO }) => {
   const indexAfdxPortDA = mesDA.headers.findIndex((h) => h === "AFDX Port");
   const indexMesSizeDA = mesDA.headers.findIndex((h) => h === "Size");
 
-  const indexEquipmentBITE = mesBITE?.headers.findIndex(
-    (h) => h === "Equipment"
-  );
-  const indexAfdxPortBITE = mesBITE?.headers.findIndex(
-    (h) => h === "AFDX Port"
-  );
-  const indexMesSizeBITE = mesBITE?.headers.findIndex((h) => h === "Size");
+  const indexEquipmentBITE = mesBITE
+    ? mesBITE.headers.findIndex((h) => h === "Equipment")
+    : undefined;
+  const indexAfdxPortBITE = mesBITE
+    ? mesBITE.headers.findIndex((h) => h === "AFDX Port")
+    : undefined;
+  const indexMesSizeBITE = mesBITE ? mesBITE.headers.findIndex((h) => h === "Size") : undefined;
 
   return Object.entries(afdx2tte)
     .filter(([port, { direction }]) => direction === IO)
@@ -71,10 +69,7 @@ module.exports.makeData = ({ sid, afdx2tte, pos, IO }) => {
     .filter((r) => r[indexEquipment] === pos)
     .map((row) => {
       const afdxPort = getAfdxPortByVlName(sid.messages, row[indexVlName], pos);
-      const range =
-        row[indexRange] === "N/A"
-          ? "0...0"
-          : row[indexRange].replace("…", "...");
+      const range = row[indexRange] === "N/A" ? "0...0" : row[indexRange].replace("…", "...");
 
       let result = "";
       result += row[indexFSMSW];

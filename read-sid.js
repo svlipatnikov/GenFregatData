@@ -16,7 +16,7 @@ module.exports.sidRead = (application) => {
       xlsx.utils.sheet_to_json(excelData.Sheets[name], { header: 1 })
     );
 
-    if (sheetDataWithHeader?.length)
+    if (sheetDataWithHeader && sheetDataWithHeader.length)
       resultData[key] = {
         headers: sheetDataWithHeader.shift(),
         data: sheetDataWithHeader,
