@@ -16,7 +16,10 @@ if (!inputDir.includes("DA") || !inputDir.includes("CONFIG")) {
 const apps = getApps();
 const positions = getPos();
 const sidDA = sidRead("DA");
-const sidBITE = apps.includes("BITE") && inputDir.includes("BITE") ? sidRead("BITE") : undefined;
+const sidBITE =
+  apps.includes("BITE") && inputDir.includes("BITE")
+    ? sidRead("BITE")
+    : undefined;
 
 // GENERATE FILES
 const OUT_PATH = "../FREGAT_DATA/";
@@ -46,8 +49,8 @@ positions.forEach((pos) => {
   fs.mkdirSync(path);
   fs.writeFileSync(path + `/${pos}_Data.txt`, dataIn);
   fs.writeFileSync(path + `/${pos}_Data_Out.txt`, dataOut);
-  fs.writeFileSync(path + `/${pos}_Mes_Size.txt`, mesSizeIn);
-  fs.writeFileSync(path + `/${pos}_Mes_Size_Out.txt`, mesSizeOut);
+  fs.writeFileSync(path + `/${pos}_Mes_Size_Out.txt`, mesSizeIn); // для стенда Input и Output инвертируются
+  fs.writeFileSync(path + `/${pos}_Mes_Size.txt`, mesSizeOut); // для стенда Input и Output инвертируются
   fs.writeFileSync(path + `/${pos}_Param.utst`, paramIn);
   fs.writeFileSync(path + `/${pos}_Param_Out.utst`, paramOut);
   fs.writeFileSync(path + `/${pos}_ICD_Param.utst`, icdParamIn);

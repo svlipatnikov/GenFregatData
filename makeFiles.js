@@ -3,7 +3,9 @@ const { TYPES } = require("./static");
 module.exports.makeParam = ({ table, pos, ICD = false, start = 0 }) => {
   const indexEquipment = 0;
   const indexIdentity = table.headers.findIndex((h) => h === "Identity");
-  const indexParam = ICD ? 7 : table.headers.findIndex((h) => h === "Parameter name");
+  const indexParam = ICD
+    ? 7
+    : table.headers.findIndex((h) => h === "Parameter name");
 
   return table.data
     .filter((r) => r[indexEquipment] === pos)
@@ -27,7 +29,9 @@ module.exports.makeMesSize = ({ mesDA, mesBITE, afdx2tte, pos, IO }) => {
   const indexAfdxPortBITE = mesBITE
     ? mesBITE.headers.findIndex((h) => h === "AFDX Port")
     : undefined;
-  const indexMesSizeBITE = mesBITE ? mesBITE.headers.findIndex((h) => h === "Size") : undefined;
+  const indexMesSizeBITE = mesBITE
+    ? mesBITE.headers.findIndex((h) => h === "Size")
+    : undefined;
 
   return Object.entries(afdx2tte)
     .filter(([port, { direction }]) => direction === IO)
@@ -64,12 +68,16 @@ module.exports.makeData = ({ sid, afdx2tte, pos, IO }) => {
   const indexMSW = headers.findIndex((h) => h === "MSW");
   const indexMSB = headers.findIndex((h) => h === "MSB");
   const indexRange = headers.findIndex((h) => h === "Value Domain");
+  const indexSize = indexMSB + 1;
 
   return data
     .filter((r) => r[indexEquipment] === pos)
     .map((row) => {
       const afdxPort = getAfdxPortByVlName(sid.messages, row[indexVlName], pos);
-      const range = row[indexRange] === "N/A" ? "0...0" : row[indexRange].replace("…", "...");
+      const range =
+        row[indexRange] === "N/A"
+          ? "0...0"
+          : row[indexRange].replace("…", "...");
 
       let result = "";
       result += row[indexFSMSW];
@@ -80,6 +88,7 @@ module.exports.makeData = ({ sid, afdx2tte, pos, IO }) => {
       result += " " + afdx2tte[afdxPort].tte;
       result += " " + roundNum(range.split("...")[0], 16);
       result += " " + roundNum(range.split("...")[1], 16);
+      result += " " + parseInt(row[indexSize] || 0, 10); // to fix no-text excel emtpy data
 
       return result;
     })
