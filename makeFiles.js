@@ -88,7 +88,7 @@ module.exports.makeData = ({ sid, afdx2tte, pos, IO }) => {
       result += " " + afdx2tte[afdxPort].tte;
       result += " " + roundNum(range.split("...")[0], 16);
       result += " " + roundNum(range.split("...")[1], 16);
-      result += " " + parseInt(row[indexSize] || 0, 10); // to fix no-text excel emtpy data
+      result += " " + (row[indexSize] || 0).toString();
 
       return result;
     })

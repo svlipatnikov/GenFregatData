@@ -1,0 +1,24 @@
+{
+  "name": "gen-fregat-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "genApp.js",
+  "dependencies": {
+    "xlsx": "^0.17.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/svlipatnikov/GenFregatData.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/svlipatnikov/GenFregatData/issues"
+  },
+  "homepage": "https://github.com/svlipatnikov/GenFregatData#readme"
+}
